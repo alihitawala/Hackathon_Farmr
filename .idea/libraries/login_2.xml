@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="login-2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.climate.login/login/2/jars/libs/volley.jar!/" />
+      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.climate.login/login/2/res" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.climate.login/login/2/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

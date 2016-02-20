@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">testlogin</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_farms">Map</string>
+</resources>
