@@ -1,5 +1,6 @@
 package com.climate.farmr.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.Map;
 /**
  * Created by aliHitawala on 2/20/16.
  */
-public class Farm {
+public class Farm implements Serializable{
     private String timezone;
     private String farmNumber;
     private String tractNumber;

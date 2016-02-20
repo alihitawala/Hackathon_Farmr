@@ -191,7 +191,7 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
         for (Farm f : topFarms) {
             Log.d(TAG, "farm marking here");
             MarkerOptions mo = new MarkerOptions().position(new LatLng(f.getCentroid().getLat(), f.getCentroid().getLog()))
-                    .title(f.getCounty() + " - " + f.getFarmNumber())
+                    .title(f.getFarmNumber())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.plantation));;
             Marker marker = mMap.addMarker(mo);
         }
@@ -199,9 +199,8 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker arg0) {
-                Intent intent = new Intent(FarmsActivity.this, FarmDetailsActivity.class);
                 Log.d(TAG, "Marker clicked!!");
-                Farm f = farmNumberMap.get(arg0.getTitle().split("-")[1].trim());
+                Farm f = farmNumberMap.get(arg0.getTitle());
                 arg0.showInfoWindow();
                 Toast.makeText(FarmsActivity.this, arg0.getTitle(), Toast.LENGTH_LONG).show();
                 FarmsActivity.this.changeView(f);
@@ -259,17 +258,15 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
     }
 
     public void changeView(Farm f) {
-        setContentView(R.layout.farm_details);
-        TextView acres, farmNumber, county, state;
-        acres = (TextView) findViewById(R.id.acres);
-        farmNumber = (TextView) findViewById(R.id.farm_number);
-        county = (TextView) findViewById(R.id.county);
-        state = (TextView) findViewById(R.id.state);
+        Intent intent = new Intent(FarmsActivity.this, FarmDetailActivity.class);
 
-        acres.setText(f.getAcres());
-        farmNumber.setText(f.getFarmNumber());
-        county.setText(f.getCounty());
-        state.setText(f.getState());
+        intent.putExtra("SessionToken", session.toString());
+        intent.putExtra("Lat", lat);
+        intent.putExtra("Long", log);
+        intent.putExtra("Farm", f);
+        startActivity(intent);
+//        setContentView(R.layout.farm_details);
+
     }
 
     @Override

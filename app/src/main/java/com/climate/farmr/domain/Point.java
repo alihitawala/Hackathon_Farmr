@@ -1,9 +1,11 @@
 package com.climate.farmr.domain;
 
+import java.io.Serializable;
+
 /**
  * Created by aliHitawala on 2/20/16.
  */
-public class Point {
+public class Point implements Serializable{
     private double lat;
     private double log;
 

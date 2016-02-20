@@ -1,9 +1,11 @@
 package com.climate.farmr.domain;
 
+import java.io.Serializable;
+
 /**
  * Created by aliHitawala on 2/20/16.
  */
-public class Soil {
+public class Soil implements Serializable {
     private String name;
     private String quatity;
     private String unit;

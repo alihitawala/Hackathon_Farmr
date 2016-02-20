@@ -4,12 +4,15 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
     <permission
         android:name="com.climate.farmr.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature"/>
-    <uses-permission android:name="com.climate.farmr.permission.MAPS_RECEIVE"/>
-    <uses-library android:name="com.google.android.maps"/>
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.climate.farmr.permission.MAPS_RECEIVE" />
+
+    <uses-library android:name="com.google.android.maps" />
 
     <application
         android:allowBackup="true"
@@ -17,7 +20,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.climate.farmr.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.climate.farmr.HomeActivity"
+            android:name=".HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -42,13 +45,20 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name="com.climate.farmr.FarmsActivity"
-            android:label="@string/title_activity_farms"></activity>
-        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+            android:name=".FarmsActivity"
+            android:label="@string/title_activity_farms" />
+        <!--
+             ATTENTION: This was auto-generated to add Google Play services to your project for
+             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".FarmDetailActivity"
+            android:label="@string/title_activity_farm_detail"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
