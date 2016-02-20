@@ -1,7 +1,9 @@
 package com.climate.farmr.domain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by aliHitawala on 2/20/16.
@@ -18,6 +20,33 @@ public class Farm {
     private List<Soil> soils = new ArrayList<>();
     private List<Point> coordinates = new ArrayList<>();
     private String geometryType;
+    private double value;
+    private double distance;
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
+    private Map<String, Double> cropToValue = new HashMap<>();
+
+    public Map<String, Double> getCropValueMap() {
+        return cropToValue;
+    }
+    public void putCropValue(String crop, double value) {
+        cropToValue.put(crop, value);
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
 
     public String getTimezone() {
         return timezone;

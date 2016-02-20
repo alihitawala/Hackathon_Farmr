@@ -1,8 +1,8 @@
 package com.climate.farmr;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,27 +19,29 @@ import com.android.volley.toolbox.Volley;
 import com.climate.farmr.domain.Farm;
 import com.climate.farmr.domain.Point;
 import com.climate.farmr.domain.Soil;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.PriorityQueue;
 
 public class FarmsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -51,7 +53,12 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
     private List<Farm> topFarms = new ArrayList<>();
     SupportMapFragment mapFragment;
     LatLng currentLocation;
-    HashMap<String, Farm> farmNumberMap = new HashMap<String,Farm>();
+    HashMap<String, Farm> farmNumberMap = new HashMap<String, Farm>();
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
     @Override
@@ -73,6 +80,9 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
         getDetails();
         mapFragment.getMapAsync(this);
         //once get the farm details start the map
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     public void getDetails() {
@@ -129,7 +139,7 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
                                         farm.getSoils().add(soil);
                                     }
                                     farms.add(farm);
-                                    farmNumberMap.put(farm.getFarmNumber(),farm);
+                                    farmNumberMap.put(farm.getFarmNumber(), farm);
                                 }
                                 Log.d(TAG, "SIZE FARM = " + farms.size());
                             }
@@ -180,7 +190,9 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
         mMap.addMarker(new MarkerOptions().position(currentLocation).title("You are here!"));
         for (Farm f : topFarms) {
             Log.d(TAG, "farm marking here");
-            MarkerOptions mo = new MarkerOptions().position(new LatLng(f.getCentroid().getLat(), f.getCentroid().getLog())).title(f.getCounty() + " - " + f.getFarmNumber());
+            MarkerOptions mo = new MarkerOptions().position(new LatLng(f.getCentroid().getLat(), f.getCentroid().getLog()))
+                    .title(f.getCounty() + " - " + f.getFarmNumber())
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.plantation));;
             Marker marker = mMap.addMarker(mo);
         }
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
@@ -195,39 +207,60 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
                 FarmsActivity.this.changeView(f);
                 return true;
             }
-
         });
     }
 
     public ArrayList<Farm> getNearestFiveFarms(List<Farm> farms) {
-        TreeMap<Float, Farm> listOfDistances = new TreeMap<Float,Farm>();
-        for(Farm f : farms){
-            listOfDistances.put(compareDistanceWithCurrent(f.getCentroid().getLat(),f.getCentroid().getLog()),f);
+        PriorityQueue<Farm> priorityQueue = new PriorityQueue<>(10, new Comparator<Farm>() {
+            @Override
+            public int compare(Farm lhs, Farm rhs) {
+                return (int) (rhs.getValue() - lhs.getValue());
+            }
+        });
+        for (Farm f : farms) {
+            double value = 0;
+            double acre = Double.parseDouble(f.getAcres());
+            for (Soil soil : f.getSoils()) {
+                double acreProportion = Double.parseDouble(soil.getFieldProportion());
+                for (String crop : CropInformation.crops) {
+                    if (CropInformation.cropToSoilType.get(crop).contains(soil.getName())) {
+                        double temp = acre * acreProportion * CropInformation.cropToYieldPerAcre.get(crop);
+                        value += temp;
+                        if (f.getCropValueMap().containsKey(crop)) {
+                            temp += f.getCropValueMap().get(crop);
+                        }
+                        f.putCropValue(crop, temp);
+                    }
+                }
+                value += HydrocarbonInformation.valueInfo.get(soil.getHydrogroup()) * acreProportion;
+            }
+            f.setDistance(compareDistanceWithCurrent(f.getCentroid().getLat(), f.getCentroid().getLog()));
+            f.setValue(value - (f.getDistance() * 0.01));
+            priorityQueue.add(f);
         }
         ArrayList<Farm> nearestFarms = new ArrayList<Farm>();
-        nearestFarms.add(listOfDistances.get(listOfDistances.keySet().toArray()[0]));
-        nearestFarms.add(listOfDistances.get(listOfDistances.keySet().toArray()[1]));
-        nearestFarms.add(listOfDistances.get(listOfDistances.keySet().toArray()[2]));
-        nearestFarms.add(listOfDistances.get(listOfDistances.keySet().toArray()[3]));
-        nearestFarms.add(listOfDistances.get(listOfDistances.keySet().toArray()[4]));
+        for (int i=0;i<10;i++) {
+            Farm contender = priorityQueue.remove();
+            nearestFarms.add(contender);
+            Log.d(TAG, "TOP FARM :::: " + contender.getValue());
+            Log.d(TAG, "TOP FARM DISTANCE :::: " + contender.getDistance());
+        }
         return nearestFarms;
-
-
     }
 
-    public float compareDistanceWithCurrent(double x1, double y1) {
+    public float compareDistanceWithCurrent(double destinationLat, double destination_long) {
         Location locationA = new Location("point A");
         locationA.setLatitude(lat);
         locationA.setLongitude(log);
         Location locationB = new Location("point B");
-        locationB.setLatitude(x1);
-        locationB.setLongitude(y1);
-        return locationA.distanceTo(locationB) ;
+        locationB.setLatitude(destinationLat);
+        locationB.setLongitude(destination_long);
+        return locationA.distanceTo(locationB);
     }
 
-    public void changeView(Farm f){
+    public void changeView(Farm f) {
         setContentView(R.layout.farm_details);
-        TextView acres, farmNumber, county,state;
+        TextView acres, farmNumber, county, state;
         acres = (TextView) findViewById(R.id.acres);
         farmNumber = (TextView) findViewById(R.id.farm_number);
         county = (TextView) findViewById(R.id.county);
@@ -237,6 +270,45 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
         farmNumber.setText(f.getFarmNumber());
         county.setText(f.getCounty());
         state.setText(f.getState());
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Farms Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.climate.farmr/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Farms Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.climate.farmr/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 }
