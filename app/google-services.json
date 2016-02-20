@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_id": "farmr-e393c",
+    "project_number": "1029989677720",
+    "name": "Farmr"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1029989677720:android:8ad11f77cb7fd593",
+        "client_id": "android:com.climate.farmr",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.climate.farmr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1029989677720-5hlltf7i4hp4dtvbnsjhrv7s978gnje7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.climate.farmr",
+            "certificate_hash": "1D2089914F05C83AF239CCE962225F0ADE383481"
+          }
+        },
+        {
+          "client_id": "1029989677720-quodun3dalukh98a0emu5d4s3fj8h1g0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
