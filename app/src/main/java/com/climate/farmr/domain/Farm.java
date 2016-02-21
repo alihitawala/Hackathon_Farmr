@@ -23,6 +23,15 @@ public class Farm implements Serializable{
     private String geometryType;
     private double value;
     private double distance;
+    private double pop;
+
+    public double getPop() {
+        return pop;
+    }
+
+    public void setPop(double pop) {
+        this.pop = pop;
+    }
 
     public double getDistance() {
         return distance;

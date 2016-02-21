@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -36,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -54,11 +54,18 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
     SupportMapFragment mapFragment;
     LatLng currentLocation;
     HashMap<String, Farm> farmNumberMap = new HashMap<String, Farm>();
+    RequestQueue queue;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+    Comparator<Farm> FARM_COMPARATOR = new Comparator<Farm>() {
+        @Override
+        public int compare(Farm lhs, Farm rhs) {
+            return (int) (rhs.getValue() - lhs.getValue());
+        }
+    };
 
 
     @Override
@@ -76,6 +83,7 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        queue = Volley.newRequestQueue(this);
         currentLocation = new LatLng(lat, log);
         getDetails();
         mapFragment.getMapAsync(this);
@@ -142,9 +150,8 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
                                     farmNumberMap.put(farm.getFarmNumber(), farm);
                                 }
                                 Log.d(TAG, "SIZE FARM = " + farms.size());
+                                FarmsActivity.this.setNearestFarms(farms);
                             }
-                            topFarms = FarmsActivity.this.getNearestFiveFarms(farms);
-                            FarmsActivity.this.mapFragment.getMapAsync(FarmsActivity.this);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -167,7 +174,6 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
                 return map;
             }
         };
-        RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(jsObjRequest);
     }
 
@@ -209,13 +215,8 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
         });
     }
 
-    public ArrayList<Farm> getNearestFiveFarms(List<Farm> farms) {
-        PriorityQueue<Farm> priorityQueue = new PriorityQueue<>(10, new Comparator<Farm>() {
-            @Override
-            public int compare(Farm lhs, Farm rhs) {
-                return (int) (rhs.getValue() - lhs.getValue());
-            }
-        });
+    public void setNearestFarms(List<Farm> farms) {
+        PriorityQueue<Farm> priorityQueue = new PriorityQueue<>(10, FARM_COMPARATOR);
         for (Farm f : farms) {
             double value = 0;
             double acre = Double.parseDouble(f.getAcres());
@@ -244,7 +245,62 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
             Log.d(TAG, "TOP FARM :::: " + contender.getValue());
             Log.d(TAG, "TOP FARM DISTANCE :::: " + contender.getDistance());
         }
-        return nearestFarms;
+        topFarms = nearestFarms;
+//        updateTheRankOnWeather(nearestFarms);
+        FarmsActivity.this.mapFragment.getMapAsync(FarmsActivity.this);
+    }
+
+    private void updateTheRankOnWeather(ArrayList<Farm> nearestFarms) {
+        int i = 1;
+        for (Farm farm : nearestFarms) {
+            updateFarmValue(farm, i);
+            i++;
+        }
+    }
+
+    public void sortPrioritySyncMap() {
+        Collections.sort(topFarms, FARM_COMPARATOR);
+        FarmsActivity.this.mapFragment.getMapAsync(FarmsActivity.this);
+    }
+
+    private void updateFarmValue(final Farm farm, final int i) {
+        String s = "http://api.wunderground.com/api/5c2d99ee939f93a1/forecast10day/q/"+ lat +","+ log +".json";
+        final JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, s, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d(TAG, response.toString(2));
+                            if (response.has("error")) {
+                                Log.e(TAG, response.optString("error_description"));
+                            } else {
+                                JSONArray forecastday = response.optJSONObject("forecast").optJSONObject("txt_forecast").optJSONArray("forecastday");
+                                for (int i = 0; i < forecastday.length(); i++) {
+                                    farm.setPop(farm.getPop()+Double.parseDouble(forecastday.optJSONObject(i).getString("pop")));
+                                }
+                                farm.setValue(farm.getValue() - farm.getPop());
+                                if (i == 10){
+                                    sortPrioritySyncMap();
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                return map;
+            }
+        };
+        queue.add(jsObjRequest);
     }
 
     public float compareDistanceWithCurrent(double destinationLat, double destination_long) {
@@ -265,8 +321,6 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
         intent.putExtra("Long", log);
         intent.putExtra("Farm", f);
         startActivity(intent);
-//        setContentView(R.layout.farm_details);
-
     }
 
     @Override
