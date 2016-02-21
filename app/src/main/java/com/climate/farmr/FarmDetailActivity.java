@@ -29,9 +29,8 @@ public class FarmDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.farm_details);
-        //setContentView(R.layout.farm_profile_view);
 
-        /*try {
+        try {
             session = new JSONObject((String) getIntent().getExtras().get("SessionToken"));
             lat = getIntent().getExtras().getDouble("Lat");
             log = getIntent().getExtras().getDouble("Long");
@@ -39,17 +38,6 @@ public class FarmDetailActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        currentLocation = new LatLng(lat, log);
-        TextView acres, farmNumber, county, state;
-        acres = (TextView) findViewById(R.id.acres);
-        farmNumber = (TextView) findViewById(R.id.farm_number);
-        county = (TextView) findViewById(R.id.county);
-        state = (TextView) findViewById(R.id.state);
-
-        acres.setText(farm.getAcres());
-        farmNumber.setText(farm.getFarmNumber());
-        county.setText(farm.getCounty());
-        state.setText(farm.getState());*/
 
         WebView farmDetailWebView = (WebView)this.findViewById(R.id.farmDetailsWebView);
         farmDetailWebView.getSettings().setJavaScriptEnabled(true);
