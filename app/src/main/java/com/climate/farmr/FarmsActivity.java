@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -193,15 +195,34 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
         // Add a marker in current location and move the camera
 
         Log.d(TAG, lat + " " + log + " *****");
-        mMap.addMarker(new MarkerOptions().position(currentLocation).title("You are here!"));
+        Marker you = mMap.addMarker(new MarkerOptions().position(currentLocation).title("You are here!"));
+        you.showInfoWindow();
         for (Farm f : topFarms) {
             Log.d(TAG, "farm marking here");
             MarkerOptions mo = new MarkerOptions().position(new LatLng(f.getCentroid().getLat(), f.getCentroid().getLog()))
-                    .title(f.getFarmNumber())
+                    .title(f.getFarmNumber()).snippet("Snippet")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.plantation));;
             Marker marker = mMap.addMarker(mo);
+            marker.showInfoWindow();
         }
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 12));
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                View v = getLayoutInflater().inflate(R.layout.windowlayout, null);
+                LatLng latLng = marker.getPosition();
+                TextView tvLat = (TextView) v.findViewById(R.id.lat);
+                TextView tvLng = (TextView) v.findViewById(R.id.log);
+                tvLat.setText("Latitude:" + latLng.latitude);
+                tvLng.setText("Longitude:"+ latLng.longitude);
+                return v;
+            }
+        });
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker arg0) {

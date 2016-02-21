@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity
 								textView.setText(response.optString("error_description"));
 							} else {
 								JSONArray fields = response.optJSONArray("fields");
-								StringBuilder stringBuilder = new StringBuilder("Fields:\n\n");
+								StringBuilder stringBuilder = new StringBuilder("Field:\n\n");
 								for (int i = 0; i < fields.length(); ++i) {
 									stringBuilder.append(fields.optJSONObject(i).optString("name"));
 									stringBuilder.append("\n");

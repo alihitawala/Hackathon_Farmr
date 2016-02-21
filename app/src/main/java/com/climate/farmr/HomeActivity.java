@@ -16,7 +16,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.beardedhen.androidbootstrap.TypefaceProvider;
-import com.climate.farmr.domain.Farm;
+import com.climate.farmr.domain.Field;
 import com.climate.farmr.domain.Point;
 import com.climate.farmr.domain.Soil;
 
@@ -34,8 +34,10 @@ public class HomeActivity extends AppCompatActivity {
     JSONObject session = null;
     double lat, log;
     TextView test = null;
+    private List<Field> fields = new ArrayList<>();
     private Object details;
     private static final String TAG = "hmc";
+    RequestQueue queue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         test = (TextView) findViewById(R.id.test);
+        queue = Volley.newRequestQueue(this);
         setSupportActionBar(toolbar);
         try {
             session = new JSONObject((String) getIntent().getExtras().get("SessionToken"));
@@ -51,6 +54,7 @@ public class HomeActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        getFields();
         TypefaceProvider.registerDefaultIconSets();
     }
 
@@ -62,5 +66,58 @@ public class HomeActivity extends AppCompatActivity {
         intent.putExtra("Lat", lat);
         intent.putExtra("Long", log);
         startActivity(intent);
+    }
+
+    public void getFields() {
+        String s = "https://hackillinois.climate.com/api/fields";
+        Log.d(TAG, s + "    ***********************");
+        final JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, s, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d(TAG, response.toString(2));
+                            if (response.has("error")) {
+                                Log.e(TAG, response.optString("error_description"));
+                            } else {
+                                JSONArray jfields = response.optJSONArray("fields");
+                                for (int i = 0; i < jfields.length(); i++) {
+                                    Field field = new Field();
+                                    String name = jfields.optJSONObject(i).optString("name");
+                                    field.setName(name);
+                                    String farmId = jfields.optJSONObject(i).optString("farmId");
+                                    field.setFarmId(farmId);
+                                    JSONArray centroid = jfields.optJSONObject(i).optJSONObject("centroid").optJSONArray("coordinates");
+                                    if (centroid != null) {
+                                        Double slog = (Double) centroid.opt(0);
+                                        Double slat = (Double) centroid.opt(1);
+                                        field.setCentroid(new Point(slog, slat));
+                                    }
+                                    fields.add(field);
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = super.getHeaders();
+                HashMap<String, String> map = new HashMap<>();
+                map.putAll(headers);
+                String auth = null;
+                auth = "Bearer " + session.opt("access_token");
+                map.put("Authorization", auth);
+                return map;
+            }
+        };
+        queue.add(jsObjRequest);
     }
 }
