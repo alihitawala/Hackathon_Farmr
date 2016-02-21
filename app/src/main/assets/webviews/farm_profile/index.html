@@ -189,7 +189,7 @@
 
                 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                     <div class="info-box brown-bg">
-                        <i class="fa fa-copyright"></i>
+                        <i class="fa fa-compass"></i>
                         <div class="count" id="county">-</div>
                         <div class="title">County</div>
                     </div><!--/.info-box-->
@@ -216,6 +216,38 @@
                         <i class="fa fa-leaf"></i>
                         <div class="count" id="soil-type">-</div>
                         <div class="title">Soil Type</div>
+                    </div><!--/.info-box-->
+                </div><!--/.col-->
+
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                    <div class="info-box green-bg">
+                        <i class="fa fa-leaf"></i>
+                        <div class="count" id="potato">-</div>
+                        <div class="title">Potato Yield (bu.)</div>
+                    </div><!--/.info-box-->
+                </div><!--/.col-->
+
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                    <div class="info-box green-bg">
+                        <i class="fa fa-leaf"></i>
+                        <div class="count" id="corn">-</div>
+                        <div class="title">Corn Yield (bu.)</div>
+                    </div><!--/.info-box-->
+                </div><!--/.col-->
+
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                    <div class="info-box green-bg">
+                        <i class="fa fa-leaf"></i>
+                        <div class="count" id="soybean">-</div>
+                        <div class="title">Soybean Yield (bu.)</div>
+                    </div><!--/.info-box-->
+                </div><!--/.col-->
+
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                    <div class="info-box green-bg">
+                        <i class="fa fa-leaf"></i>
+                        <div class="count" id="wheat">-</div>
+                        <div class="title">Wheat Yield (bu.)</div>
                     </div><!--/.info-box-->
                 </div><!--/.col-->
 
@@ -452,6 +484,10 @@
 				//alert("start");
     			var acres = 
     			document.getElementById("acres").innerHTML = MyHandler.getAcres();
+    			document.getElementById("potato").innerHTML = MyHandler.getPotatoYield();
+    			document.getElementById("wheat").innerHTML = MyHandler.getWheatYield();
+    			document.getElementById("soybean").innerHTML = MyHandler.getSoybeanYield();
+    			document.getElementById("corn").innerHTML = MyHandler.getCornYield();
     			document.getElementById("county").innerHTML = MyHandler.getCounty();
     			document.getElementById("state").innerHTML = MyHandler.getState();
     			document.getElementById("soil-type").innerHTML = MyHandler.getSoilType()=="undefined"?"Clay":MyHandler.getSoilType();

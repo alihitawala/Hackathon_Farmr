@@ -137,6 +137,8 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
                                     }
                                     JSONObject soil_types = properties.optJSONObject("soil-types");
                                     JSONObject sTypes = soil_types.optJSONObject("types");
+                                    String defaultSoilType = soil_types.optString("default");
+                                    farm.setDefaultSoilType(defaultSoilType);
                                     Iterator<String> it = sTypes.keys();
                                     while (it.hasNext()) {
                                         String sName = it.next();
