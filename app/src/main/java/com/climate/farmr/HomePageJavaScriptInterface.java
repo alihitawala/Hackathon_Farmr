@@ -24,12 +24,17 @@ public class HomePageJavaScriptInterface {
     }
 
     @JavascriptInterface
-    public void showFieldsNearMyFields(String fieldNumber) {
-        parentActivity.showFarms();
+    public void showFarmsNearMyFarms(String farmName) {
+        parentActivity.showFarmsNearMyFarms(farmName);
     }
 
     @JavascriptInterface
     public void showMyProfile() {
         parentActivity.showMyProfile();
+    }
+
+    @JavascriptInterface
+    public String populateDetailsDropDown() {
+        return parentActivity.populateFieldDropDown();
     }
 }

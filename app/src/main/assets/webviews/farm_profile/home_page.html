@@ -176,8 +176,8 @@
             <div class="row">
                 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                         <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                            <div onclick="MyHandler.showMyProfile()" class="info-box dark-bg">
-                                <i nclick="MyHandler.showFieldsNearBy()" class="fa fa-university"></i>
+                            <div class="info-box dark-bg">
+                                <i onclick="MyHandler.showMyProfile()" class="fa fa-university"></i>
                                 <div class="count" id="my_profile">My Profile</div>
                                 <div class="title">My Profile</div>
                             </div><!--/.info-box-->
@@ -199,15 +199,10 @@
                 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                         <div class="info-box brown-bg">
-                            <i onclick="MyHandler.showFieldsNearMyFields()" class="fa fa-location-arrow"></i>
+                            <i onclick="MyHandler.showFarmsNearMyFarms(document.getElementById('dropdownField').options[document.getElementById('dropdownField').selectedIndex].value)" class="fa fa-location-arrow"></i>
                             <div class="count" id="fields_near_fields">Farms Near:</div>
-                            <div class="title"></div>
-
-
-                            <button id="btnGroupVerticalDrop1" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                Dropdown
-                                <span class="caret"></span>
-                            </button>
+                            <select id="dropdownField" class="form-control">
+                            </select>
                         </div><!--/.info-box-->
                     </div><!--/.col-->
                 </div><!--/.col-->
@@ -343,19 +338,13 @@
 
 
 		function loaded() {
-				//alert("start");
-    			var acres =
-    			document.getElementById("acres").innerHTML = MyHandler.getAcres();
-    			document.getElementById("county").innerHTML = MyHandler.getCounty();
-    			document.getElementById("state").innerHTML = MyHandler.getState();
-    			document.getElementById("soil-type").innerHTML = MyHandler.getSoilType()=="undefined"?"Clay":MyHandler.getSoilType();
-    			document.getElementById("centroid").innerHTML = MyHandler.getCentroidLatitude()+" "+MyHandler.getCentroidLongitude();
-
-    			//alert(acres);
-    	//	alert('ok');
+		    var str = MyHandler.populateDetailsDropDown().split(";");
+		    var html_final = ""
+		    for(var i =0;i<str.length;i++) {
+		        html_final += '<option value="'+ str[i] +'">' + str[i] + '</option>';
+		    }
+            document.getElementById("dropdownField").innerHTML = html_final;
     	}
-
-	//	alert('ok');
     </script>
 
 </body>

@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
 
@@ -79,8 +77,30 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void showFarmsNearMyFarms(String farmNumber) {
-        //TODO: Get the farms near the farmNumber farm
+
+    public String populateFieldDropDown() {
+        String result = "";
+        for (Field f : fields) {
+            result += f.getName() + ";";
+        }
+        return result.substring(0, result.length()-1);
+    }
+
+    public void showFarmsNearMyFarms(String farmName) {
+        Log.d(TAG, "After BUTOOOOONNNNN CLICKKKK=" + farmName);
+        for(Field f : fields) {
+            if (f.getName().equals(farmName)) {
+                Intent intent = new Intent(HomeActivity.this, FarmsActivity.class);
+                Log.d(TAG, "Button clicked!!");
+                intent.putExtra("SessionToken", session.toString());
+                double lat_my = f.getCentroid().getLat();
+                double log_my = f.getCentroid().getLog();
+                intent.putExtra("Lat", lat_my);
+                intent.putExtra("Long", log_my);
+                startActivity(intent);
+                break;
+            }
+        }
     }
 
     public void showMyProfile() {

@@ -155,6 +155,7 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
                                 FarmsActivity.this.setNearestFarms(farms);
                             }
                         } catch (JSONException e) {
+                            Log.e(TAG, "JSON Exception occurred!");
                             e.printStackTrace();
                         }
                     }
