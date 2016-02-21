@@ -76,14 +76,6 @@ public class HomeActivity extends AppCompatActivity {
         intent.putExtra("SessionToken", session.toString());
         intent.putExtra("Lat", lat);
         intent.putExtra("Long", log);
-        Farm f = new Farm();
-        f.setAcres("100");
-        Point p = new Point(10,-44.4);
-        f.setCentroid(p);
-        f.setCounty("Urbana");
-        f.setState("Illinois");
-        f.setDefaultSoilType("Clay");
-        intent.putExtra("Farm", f);
         startActivity(intent);
     }
 
@@ -92,7 +84,12 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void showMyProfile() {
-        //TODO: Get the farms near the farmNumber farm
+        Intent intent = new Intent(HomeActivity.this, UserProfile.class);
+        Log.d(TAG, "Profile Button clicked!!");
+        intent.putExtra("SessionToken", session.toString());
+        intent.putExtra("Lat", lat);
+        intent.putExtra("Long", log);
+        startActivity(intent);
     }
 
     public void getFields() {

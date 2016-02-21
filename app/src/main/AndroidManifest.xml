@@ -58,6 +58,10 @@
         <activity
             android:name=".FarmDetailActivity"
             android:label="@string/title_activity_farm_detail"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".UserProfile"
+            android:label="@string/title_activity_user_profile"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
