@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity
 		implements LoginButton.LoginListener, ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 	private static final String TAG = "tcc";
-	private TextView textView, longitude, latitude;
 	private double lat, log;
 	private GoogleApiClient mGoogleApiClient;
 
@@ -44,9 +43,6 @@ public class MainActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		textView = (TextView) findViewById(R.id.textView);
-		longitude = (TextView) findViewById(R.id.longitude);
-		latitude = (TextView) findViewById(R.id.latitude);
 		LoginButton loginButton = (LoginButton) findViewById(R.id.login);
 		loginButton.setCredentials("dpi808t3vd530f", "lbvkvpldao592rsvb9cem9qde7");
 		loginButton.registerListener(this);
@@ -73,7 +69,7 @@ public class MainActivity extends AppCompatActivity
 						try {
 							Log.d(TAG, response.toString(2));
 							if (response.has("error")) {
-								textView.setText(response.optString("error_description"));
+								Log.e(TAG, "ERROR _ MAIN");
 							} else {
 								JSONArray fields = response.optJSONArray("fields");
 								StringBuilder stringBuilder = new StringBuilder("Field:\n\n");
@@ -81,7 +77,6 @@ public class MainActivity extends AppCompatActivity
 									stringBuilder.append(fields.optJSONObject(i).optString("name"));
 									stringBuilder.append("\n");
 								}
-								textView.setText(stringBuilder.toString());
 							}
 						} catch (JSONException e) {
 							e.printStackTrace();
@@ -152,8 +147,6 @@ public class MainActivity extends AppCompatActivity
 		if (mLastLocation != null) {
 			lat = mLastLocation.getLatitude();
 			log = mLastLocation.getLongitude();
-			latitude.setText(String.valueOf(mLastLocation.getLatitude()));
-			longitude.setText(String.valueOf(mLastLocation.getLongitude()));
 		}
 	}
 
