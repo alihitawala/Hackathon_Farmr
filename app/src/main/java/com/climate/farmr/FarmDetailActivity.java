@@ -1,11 +1,13 @@
 package com.climate.farmr;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.climate.farmr.domain.Farm;
@@ -18,26 +20,18 @@ public class FarmDetailActivity extends AppCompatActivity {
 
     JSONObject session = null;
     double lat, log;
-    Farm farm = null;
+    public Farm farm = null;
     LatLng currentLocation;
+    public String acres = "100";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_farm_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.farm_details);
+        //setContentView(R.layout.farm_profile_view);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        try {
+        /*try {
             session = new JSONObject((String) getIntent().getExtras().get("SessionToken"));
             lat = getIntent().getExtras().getDouble("Lat");
             log = getIntent().getExtras().getDouble("Long");
@@ -55,7 +49,17 @@ public class FarmDetailActivity extends AppCompatActivity {
         acres.setText(farm.getAcres());
         farmNumber.setText(farm.getFarmNumber());
         county.setText(farm.getCounty());
-        state.setText(farm.getState());
+        state.setText(farm.getState());*/
+
+        WebView farmDetailWebView = (WebView)this.findViewById(R.id.farmDetailsWebView);
+        farmDetailWebView.getSettings().setJavaScriptEnabled(true);
+        farmDetailWebView.addJavascriptInterface(new FarmDetailsJavaScriptInterface(this, farmDetailWebView), "MyHandler");
+        farmDetailWebView.loadUrl("file:///android_asset/webviews/farm_profile/index.html");
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
+        //farmDetailWebView.loadUrl("javascript:loaded()");
     }
 
 }
