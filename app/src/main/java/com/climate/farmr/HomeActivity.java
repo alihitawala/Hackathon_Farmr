@@ -71,7 +71,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
     public void showFarms() {
-        Intent intent = new Intent(HomeActivity.this, FarmDetailActivity.class);//change this
+        Intent intent = new Intent(HomeActivity.this, FarmsActivity.class);//change this
         Log.d(TAG, "Button clicked!!");
         intent.putExtra("SessionToken", session.toString());
         intent.putExtra("Lat", lat);
