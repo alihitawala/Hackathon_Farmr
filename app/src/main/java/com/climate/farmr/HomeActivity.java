@@ -1,11 +1,13 @@
 package com.climate.farmr;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -16,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.beardedhen.androidbootstrap.TypefaceProvider;
+import com.climate.farmr.domain.Farm;
 import com.climate.farmr.domain.Field;
 import com.climate.farmr.domain.Point;
 import com.climate.farmr.domain.Soil;
@@ -42,11 +45,9 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        test = (TextView) findViewById(R.id.test);
+        setContentView(R.layout.activity_home_web);
         queue = Volley.newRequestQueue(this);
-        setSupportActionBar(toolbar);
+
         try {
             session = new JSONObject((String) getIntent().getExtras().get("SessionToken"));
             lat = getIntent().getExtras().getDouble("Lat");
@@ -54,18 +55,44 @@ public class HomeActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        WebView homePageWebView = (WebView)this.findViewById(R.id.homePageWebView);
+        homePageWebView.getSettings().setJavaScriptEnabled(true);
+        homePageWebView.addJavascriptInterface(new HomePageJavaScriptInterface(this, homePageWebView), "MyHandler");
+        homePageWebView.loadUrl("file:///android_asset/webviews/farm_profile/home_page.html");
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
         getFields();
         TypefaceProvider.registerDefaultIconSets();
+
     }
 
 
-    public void showFarms(View view) {
-        Intent intent = new Intent(HomeActivity.this, FarmsActivity.class);
+    public void showFarms() {
+        Intent intent = new Intent(HomeActivity.this, FarmDetailActivity.class);//change this
         Log.d(TAG, "Button clicked!!");
         intent.putExtra("SessionToken", session.toString());
         intent.putExtra("Lat", lat);
         intent.putExtra("Long", log);
+        Farm f = new Farm();
+        f.setAcres("100");
+        Point p = new Point(10,-44.4);
+        f.setCentroid(p);
+        f.setCounty("Urbana");
+        f.setState("Illinois");
+        f.setDefaultSoilType("Clay");
+        intent.putExtra("Farm", f);
         startActivity(intent);
+    }
+
+    public void showFarmsNearMyFarms(String farmNumber) {
+        //TODO: Get the farms near the farmNumber farm
+    }
+
+    public void showMyProfile() {
+        //TODO: Get the farms near the farmNumber farm
     }
 
     public void getFields() {

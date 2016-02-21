@@ -49,9 +49,7 @@
 
 
     <header class="header dark-bg">
-        <div class="toggle-nav">
-            <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
-        </div>
+
 
         <!--logo start-->
         <a href="index.html" class="logo">Farm <span class="lite">Profile</span></a>
@@ -176,10 +174,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h3 class="page-header"><i class="fa fa-laptop"></i> Dashboard</h3>
-                    <ol class="breadcrumb">
-                        <li><i class="fa fa-home"></i><a href="index.html">Home</a></li>
-                        <li><i class="fa fa-laptop"></i>Dashboard</li>
-                    </ol>
+
                 </div>
             </div>
 
@@ -195,7 +190,7 @@
                 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                     <div class="info-box brown-bg">
                         <i class="fa fa-bus"></i>
-                        <div class="count" id="county">-</div>
+                        <div class="count" id="fa fa-copyright">-</div>
                         <div class="title">County</div>
                     </div><!--/.info-box-->
                 </div><!--/.col-->
@@ -459,8 +454,8 @@
     			document.getElementById("acres").innerHTML = MyHandler.getAcres();
     			document.getElementById("county").innerHTML = MyHandler.getCounty();
     			document.getElementById("state").innerHTML = MyHandler.getState();
-    			document.getElementById("soil-type").innerHTML = MyHandler.getSoilType();
-    			document.getElementById("location").innerHTML = MyHandler.getCentroidLatitude()+" "+MyHandler.getCentroidLongitude();
+    			document.getElementById("soil-type").innerHTML = MyHandler.getSoilType()=="undefined"?"Clay":MyHandler.getSoilType();
+    			document.getElementById("centroid").innerHTML = MyHandler.getCentroidLatitude()+", "+MyHandler.getCentroidLongitude();
 
     			//alert(acres);
     	//	alert('ok');
