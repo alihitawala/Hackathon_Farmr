@@ -44,6 +44,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Random;
 
 public class FarmsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -271,6 +272,13 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
         }
         topFarms = nearestFarms;
 //        updateTheRankOnWeather(nearestFarms);
+        for(Farm farm : topFarms) {
+            farm.getPopInformations().clear();
+            Random r = new Random(10);
+            for (int i=0;i<20;i++) {
+                farm.getPopInformations().add(r.nextDouble() * 100);
+            }
+        }
         FarmsActivity.this.mapFragment.getMapAsync(FarmsActivity.this);
     }
 
