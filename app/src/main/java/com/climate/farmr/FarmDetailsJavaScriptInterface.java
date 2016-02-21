@@ -114,10 +114,14 @@ public class FarmDetailsJavaScriptInterface {
     public String getSoilList() {
         String soilList="";
         for(Soil s : parentActivity.farm.getSoils()){
-            soilList+=s.getFieldProportion()+";"+s.getName()+";"+s.getHydrogroup()+";"+s.getQuatity();
-            soilList+="+";
+            DecimalFormat newFormat = new DecimalFormat("#.##");
+            double proportion =  Double.valueOf(newFormat.format(Double.parseDouble(s.getFieldProportion())));
+            double quantity =  Double.valueOf(newFormat.format(Double.parseDouble(s.getQuatity())));
+            soilList+=proportion+";"+s.getName()+";"+s.getHydrogroup()+";"+quantity;
+            soilList+="|";
         }
-        return soilList;
+        Log.d("SOILLLLL_INFOOOO", soilList);
+        return soilList.substring(0, soilList.length()-1);
     }
 
     @JavascriptInterface
@@ -127,6 +131,8 @@ public class FarmDetailsJavaScriptInterface {
             doubleList+=String.valueOf(s)+";";
             //test
         }
+        if (doubleList.length() < 1)
+            return "1;2;3;4;5";
         return doubleList.substring(0,doubleList.length()-1);
     }
 }

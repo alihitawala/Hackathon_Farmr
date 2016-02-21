@@ -297,62 +297,64 @@
                             </div>
                         </div>
                         <div class="panel-body">
-                            <table class="table bootstrap-datatable countries">
-                                <thead>
-                                <tr>
-                                    <th>Soil Type</th>
-                                    <th>Quantity</th>
-                                    <th>Hydrogroup</th>
-                                    <th>Field Proportion</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>Loam</td>
-                                    <td>2563</td>
-                                    <td>B/D</td>
-                                    <td>
-                                        <div class="progress thin">
-                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100" style="width: 73%">
-                                            </div>
-                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="27" aria-valuemin="0" aria-valuemax="100" style="width: 27%">
-                                            </div>
-                                        </div>
-                                        <span class="sr-only">73%</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Clay Loam</td>
-                                    <td>3652</td>
-                                    <td>C</td>
-                                    <td>
-                                        <div class="progress thin">
-                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 57%">
-                                            </div>
-                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 43%">
-                                            </div>
-                                        </div>
-                                        <span class="sr-only">57%</span>
-                                    </td>
-                                </tr>
-                                <tr>
 
-                                    <td>Silty Clay Loam</td>
-                                    <td>562</td>
-                                    <td>A</td>
-                                    <td>
-                                        <div class="progress thin">
-                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100" style="width: 93%">
-                                            </div>
-                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="27" aria-valuemin="0" aria-valuemax="100" style="width: 7%">
-                                            </div>
-                                        </div>
-                                        <span class="sr-only">93%</span>
-                                    </td>
-                                </tr>
+                            <div id="soil-info"></div>
+                            <!--<table class="table bootstrap-datatable countries">-->
+                                <!--<thead>-->
+                                <!--<tr>-->
+                                    <!--<th>Soil Type</th>-->
+                                    <!--<th>Quantity</th>-->
+                                    <!--<th>Hydrogroup</th>-->
+                                    <!--<th>Field Proportion</th>-->
+                                <!--</tr>-->
+                                <!--</thead>-->
+                                <!--<tbody>-->
+                                <!--<tr>-->
+                                    <!--<td>Loam</td>-->
+                                    <!--<td>2563</td>-->
+                                    <!--<td>B/D</td>-->
+                                    <!--<td>-->
+                                        <!--<div class="progress thin">-->
+                                            <!--<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100" style="width: 73%">-->
+                                            <!--</div>-->
+                                            <!--<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="27" aria-valuemin="0" aria-valuemax="100" style="width: 27%">-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                        <!--<span class="sr-only">73%</span>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                                <!--<tr>-->
+                                    <!--<td>Clay Loam</td>-->
+                                    <!--<td>3652</td>-->
+                                    <!--<td>C</td>-->
+                                    <!--<td>-->
+                                        <!--<div class="progress thin">-->
+                                            <!--<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 57%">-->
+                                            <!--</div>-->
+                                            <!--<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 43%">-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                        <!--<span class="sr-only">57%</span>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                                <!--<tr>-->
 
-                                </tbody>
-                            </table>
+                                    <!--<td>Silty Clay Loam</td>-->
+                                    <!--<td>562</td>-->
+                                    <!--<td>A</td>-->
+                                    <!--<td>-->
+                                        <!--<div class="progress thin">-->
+                                            <!--<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100" style="width: 93%">-->
+                                            <!--</div>-->
+                                            <!--<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="27" aria-valuemin="0" aria-valuemax="100" style="width: 7%">-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                        <!--<span class="sr-only">93%</span>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+
+                                <!--</tbody>-->
+                            <!--</table>-->
                         </div>
 
                     </div>
@@ -425,7 +427,7 @@
 <script src="js/charts.js"></script>
 <script src="js/jquery.slimscroll.min.js"></script>
 
-<script>
+<script type="text/javascript">
 
       //knob
       $(function() {
@@ -493,6 +495,26 @@
     			document.getElementById("soil-type").innerHTML = MyHandler.getSoilType()=="undefined"?"Clay":MyHandler.getSoilType();
     			document.getElementById("centroid").innerHTML = MyHandler.getCentroidLatitude()+", "+MyHandler.getCentroidLongitude();
 
+                var soil_info = MyHandler.getSoilList().split("|");
+                var table_str = '<table class="table bootstrap-datatable countries"><thead><tr><th>Soil Type</th><th>Quantity</th><th>Hydrogroup</th><th>Field Proportion</th></tr></thead><tbody>';
+                var table_end = '</tbody></table>'
+                var result = '';
+                for (var i=0;i<soil_info.length;i++) {
+                    var info = soil_info[i].split(';');
+                    var prop = info[0] * 100;
+                    var yprop = 100 - prop;
+                    var last_row = '<td><div class="progress thin"><div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: ' + prop + '%"></div><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: ' + yprop+'%"></div></div><span class="sr-only">'+ prop+'%</span></td>';
+                    var str = '<tr><td>' + info[1]+'</td><td>'+info[3]+'</td><td>'+info[2]+'</td>'+last_row+'</tr>';
+                    result+=str;
+                }
+                document.getElementById("soil-info").innerHTML = table_str + result + table_end;
+                var listOfValues = MyHandler.getValuesForRainFall().split(";");
+
+                $("#todayspark1").sparkline(listOfValues, {
+                    type: 'bar',
+                    height: '30',
+                    barWidth: 5,
+                    barColor: '#999'});
     			//alert(acres);
     	//	alert('ok');
     	}

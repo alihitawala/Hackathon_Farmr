@@ -83,8 +83,8 @@ public class MainActivity extends AppCompatActivity
 						}
 						Intent intent = new Intent(MainActivity.this, HomeActivity.class);
 						intent.putExtra("SessionToken", session.toString());
-						intent.putExtra("Lat", 40.110588);
-						intent.putExtra("Long", -88.207270);
+						intent.putExtra("Lat", lat);
+						intent.putExtra("Long", log);
 						startActivity(intent);
 					}
 				}, new Response.ErrorListener() {
