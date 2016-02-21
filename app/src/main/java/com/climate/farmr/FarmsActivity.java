@@ -275,6 +275,7 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
     private void updateTheRankOnWeather(ArrayList<Farm> nearestFarms) {
         int i = 1;
         for (Farm farm : nearestFarms) {
+            farm.getPopInformations().clear();
             updateFarmValue(farm, i);
             i++;
         }
@@ -285,7 +286,7 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
         FarmsActivity.this.mapFragment.getMapAsync(FarmsActivity.this);
     }
 
-    private void updateFarmValue(final Farm farm, final int i) {
+    private void updateFarmValue(final Farm farm, final int index) {
         String s = "http://api.wunderground.com/api/5c2d99ee939f93a1/forecast10day/q/"+ lat +","+ log +".json";
         final JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, s, null, new Response.Listener<JSONObject>() {
@@ -296,12 +297,16 @@ public class FarmsActivity extends FragmentActivity implements OnMapReadyCallbac
                             if (response.has("error")) {
                                 Log.e(TAG, response.optString("error_description"));
                             } else {
+                                double temp = 0.0;
                                 JSONArray forecastday = response.optJSONObject("forecast").optJSONObject("txt_forecast").optJSONArray("forecastday");
                                 for (int i = 0; i < forecastday.length(); i++) {
-                                    farm.setPop(farm.getPop()+Double.parseDouble(forecastday.optJSONObject(i).getString("pop")));
+                                    double popValue = Double.parseDouble(forecastday.optJSONObject(i).getString("pop"));
+                                    temp += popValue;
+                                    farm.getPopInformations().add(popValue);
                                 }
-                                farm.setValue(farm.getValue() - farm.getPop());
-                                if (i == 10){
+                                farm.setValue(farm.getValue() - temp);
+                                Log.d(TAG, "Pop Information extracted for " + index + " = " + temp);
+                                if (index == 10){
                                     sortPrioritySyncMap();
                                 }
                             }

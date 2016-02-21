@@ -24,6 +24,11 @@ public class Farm implements Serializable{
     private double value;
     private double distance;
     private double pop;
+    private List<Double> popInformations = new ArrayList<>();
+
+    public List<Double> getPopInformations() {
+        return popInformations;
+    }
 
     public double getPop() {
         return pop;
