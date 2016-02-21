@@ -119,4 +119,14 @@ public class FarmDetailsJavaScriptInterface {
         }
         return soilList;
     }
+
+    @JavascriptInterface
+    public String getValuesForRainFall() {
+        String doubleList = "";
+        for(double s: parentActivity.farm.getPopInformations()){
+            doubleList+=String.valueOf(s)+";";
+            //test
+        }
+        return doubleList.substring(0,doubleList.length()-1);
+    }
 }
