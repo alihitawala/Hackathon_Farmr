@@ -53,7 +53,10 @@ public class FarmDetailsJavaScriptInterface {
     }
     @JavascriptInterface
     public String getCounty() {
-        return parentActivity.farm.getCounty();
+        String county = parentActivity.farm.getCounty();
+        if (county != null && county.length() > 5)
+            county = county.substring(0,5);
+        return county;
     }
 
     @JavascriptInterface
