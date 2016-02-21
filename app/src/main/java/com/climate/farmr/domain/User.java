@@ -13,7 +13,7 @@ public class User {
     private String Country;
 
     public String getEmail() {
-        return email;
+        return email == null ? "" : email;
     }
 
     public void setEmail(String email) {
@@ -21,7 +21,7 @@ public class User {
     }
 
     public String getFirstName() {
-        return firstName;
+        return firstName == null ? "" : firstName;
     }
 
     public void setFirstName(String firstName) {
@@ -29,7 +29,7 @@ public class User {
     }
 
     public String getLastName() {
-        return lastName;
+        return lastName == null ? "" : lastName;
     }
 
     public void setLastName(String lastName) {
@@ -37,7 +37,7 @@ public class User {
     }
 
     public String getPhone() {
-        return phone;
+        return phone == null ? "" : phone;
     }
 
     public void setPhone(String phone) {
@@ -45,7 +45,7 @@ public class User {
     }
 
     public String getCity() {
-        return city;
+        return city == null ? "" : city;
     }
 
     public void setCity(String city) {
@@ -53,7 +53,7 @@ public class User {
     }
 
     public String getState() {
-        return state;
+        return state == null ? "" : state;
     }
 
     public void setState(String state) {
@@ -61,7 +61,7 @@ public class User {
     }
 
     public String getCountry() {
-        return Country;
+        return Country == null ? "" : Country;
     }
 
     public void setCountry(String country) {
